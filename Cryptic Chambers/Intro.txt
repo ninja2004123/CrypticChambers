@@ -1,0 +1,29 @@
+#######################################################################
+##                                                                   ##
+##                                                                   ##
+##                                                                   ##
+##                                                                   ##
+##       Welcome, valiant explorer, to Cryptic Chambers deep,        ##
+##            Where mysteries untold and wonders asleep.             ##
+##        Immerse thyself in this realm where puzzles abound,        ##
+##           A labyrinthine quest where secrets are found.           ##
+##                                                                   ##
+##       Step forth, daring traveler, hear the voices whisper,       ##
+##      Through corridors winding, each turn a cryptic cipher.       ##
+##             The walls doth speak with symbols of old,             ##
+##             Ancient inscriptions, riddles yet untold.             ##
+##                                                                   ##
+##          Within these hallowed halls, a symphony of awe,          ##
+##           A dance of shadows 'neath torches that draw,            ##
+##            Your gaze upon patterns, hints in disguise,            ##
+##            Solving these enigmas, truth to crystalize.            ##
+##                                                                   ##
+##              Within Cryptic Chambers, trials await,               ##
+##               Puzzles aplenty, a formidable slate.                ##
+##            Unlock locks, crack codes, doors concealed,            ##
+##             The answers revealed, your fate unsealed.             ##
+##                                                                   ##
+##                                                                   ##
+##                                                                   ##
+##                                                                   ##
+#######################################################################

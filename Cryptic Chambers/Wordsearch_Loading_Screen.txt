@@ -1,0 +1,29 @@
+########################################################################
+##                                                                    ##
+##                                                                    ##
+##                                                                    ##
+##            Behold, a lexical dungeon, a quest so grand,            ##
+##             Concealing 20 words in its medieval land.              ##
+##             Thy task, to decipher, unveil the arcane,              ##
+##          Type in the console, let words break the chain.           ##
+##                                                                    ##
+##          May you be triumphant, through letters you wade,          ##
+##       In this tapestry of language, where secrets are laid.        ##
+##                                                                    ##
+##                                                                    ##
+##                                                                    ##
+##                        LEVEL 3 - Wordsearch                        ##
+##                                                                    ##
+##                                                                    ##
+##                                                                    ##
+##                                                                    ##
+##                                                                    ##
+##                                                                    ##
+##                                                                    ##
+##                                                                    ##
+##                                                                    ##
+##                                                                    ##
+##                                                                    ##
+##                                                                    ##
+##                                                                    ##
+########################################################################

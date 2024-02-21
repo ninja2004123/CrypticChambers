@@ -1,0 +1,15 @@
+Hermione,4000
+Master,3000
+DoubleDouble,1000
+GummiBear,2000
+BunnyRabbit,4000
+Rosebud,1000
+CDawg,0
+Chili,1000
+Goose,1000
+QueenBee,4000
+Babs,2000
+Skunk,4000
+Admin,0
+quack,0
+violeta,4000

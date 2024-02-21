@@ -1,0 +1,29 @@
+#######################################################################
+##                                                                   ##
+##                                                                   ##
+##                                                                   ##
+##                                                                   ##
+##                                                                   ##
+##                                                                   ##
+##                                                                   ##
+##                                                                   ##
+##                                                                   ##
+##      Hats off, Cryptic Explorer, you've conquered with might,     ## 
+##       Through mazes and puzzles, you've shown pure insight.       ## 
+##         Tic Tac Toe and Hanoi, you've played with finesse,        ## 
+##          In the Cryptic Chambers, you've aced every test.         ## 
+##                                                                   ## 
+##             With intellect shining, a puzzle virtuoso,            ## 
+##          You've navigated each challenge, like a maestro.         ## 
+##       The chambers stand defeated, in the glow of your art,       ## 
+##        Well done, victorious player, you've won every part!       ## 
+##                                                                   ##
+##                                                                   ##
+##                                                                   ##
+##                                                                   ##
+##                                                                   ##
+##                                                                   ##
+##                                                                   ##
+##                                                                   ##
+##                                                                   ##
+#######################################################################

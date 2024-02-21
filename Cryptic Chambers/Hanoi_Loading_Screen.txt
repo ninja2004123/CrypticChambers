@@ -1,0 +1,29 @@
+########################################################################
+##                                                                    ##
+##                                                                    ##
+##                                                                    ##
+##                                                                    ##
+##          With keys 1, 2, and 3, where strategies thrive,           ##
+##         Type "12", "23", or "31" to make moves come alive.         ##
+##        From 1 to 2's or 2 to 3's or backward in the domain,        ##
+##         Remember, no bigger ring upon a smaller's terrain.         ##
+##                                                                    ##
+##                                                                    ##
+##                                                                    ##
+##                                                                    ##
+##                                                                    ##
+##                      LEVEL 2 - Tower Of Hanoi                      ##
+##                                                                    ##
+##                                                                    ##
+##                                                                    ##
+##                                                                    ##
+##                                                                    ##
+##                                                                    ##
+##                                                                    ##
+##                                                                    ##
+##                                                                    ##
+##                                                                    ##
+##                                                                    ##
+##                                                                    ##
+##                                                                    ##
+########################################################################

@@ -1,0 +1,1707 @@
+<?xml version="1.0"?>
+<flowgorithm fileversion="3.0">
+    <attributes>
+        <attribute name="name" value=""/>
+        <attribute name="authors" value="Red"/>
+        <attribute name="about" value=""/>
+        <attribute name="saved" value="2023-12-26 07:39:18 &#1087;&#1086;&#1087;&#1083;."/>
+        <attribute name="created" value="UmVkO0RFU0tUT1AtM0lQNExQRDsyMDIzLTEyLTA1OzAxOjQ4OjI1INC/0L7Qv9C7Ljs2ODU3"/>
+        <attribute name="edited" value="UmVkO0RFU0tUT1AtM0lQNExQRDsyMDIzLTEyLTIwOzA0OjA2OjAwINC/0L7Qv9C7LjsxO1JlZDtERVNLVE9QLTNJUDRMUEQ7MjAyMy0xMS0xODsxMjo1MDo1MSDQv9GA0LXRgtC/0LsuO0ZpbGVzMi5mcHJnOzE3MTE5"/>
+        <attribute name="edited" value="UmVkO0RFU0tUT1AtM0lQNExQRDsyMDIzLTEyLTIyOzAyOjIzOjMxINC/0L7Qv9C7LjsxO1JlZDtERVNLVE9QLTNJUDRMUEQ7MjAyMy0xMi0yMjswMTo0NzoxOSDQv9C+0L/Quy47V29yZHNlYXJjaC5mcHJnOzE1NDUw"/>
+        <attribute name="edited" value="UmVkO0RFU0tUT1AtM0lQNExQRDsyMDIzLTEyLTIzOzExOjM5OjE2INC/0YDQtdGC0L/Quy47MTtSZWQ7REVTS1RPUC0zSVA0TFBEOzIwMjMtMTItMjM7MDM6Mjc6MjQg0L/RgNC10YLQv9C7LjtUaWNUYWNUb2UuZnByZzsxOTYxOA=="/>
+        <attribute name="edited" value="UmVkO0RFU0tUT1AtM0lQNExQRDsyMDIzLTEyLTI0OzA4OjE1OjA3INC/0L7Qv9C7LjsyO1JlZDtERVNLVE9QLTNJUDRMUEQ7MjAyMy0xMi0yNDswNzoyMToxNCDQv9C+0L/Quy47U2NvcmVib2FyZC5mcHJnOzE1NDQ0"/>
+        <attribute name="edited" value="UmVkO0RFU0tUT1AtM0lQNExQRDsyMDIzLTEyLTI2OzA3OjM5OjE4INC/0L7Qv9C7LjsxNjg4OzcxNDI="/>
+    </attributes>
+    <function name="Main" type="None" variable="">
+        <parameters/>
+        <body>
+            <comment text="Variable Declaration"/>
+            <declare name="userName" type="String" array="False" size=""/>
+            <declare name="shouldQuit" type="Boolean" array="False" size=""/>
+            <declare name="score" type="Integer" array="False" size=""/>
+            <comment text="Engage user in story"/>
+            <call expression="playIntroOutro(&quot;Intro&quot;)"/>
+            <assign variable="userName" expression="promptUserForName()"/>
+            <assign variable="shouldQuit" expression="false"/>
+            <while expression="!shouldQuit">
+                <declare name="gameState" type="String" array="False" size=""/>
+                <assign variable="gameState" expression="chooseGameState()"/>
+                <if expression="gameState == &quot;START&quot;">
+                    <then>
+                        <assign variable="score" expression="levelMaze()"/>
+                        <call expression="updateUserScore(userName, score)"/>
+                    </then>
+                    <else/>
+                </if>
+                <if expression="gameState == &quot;SCOREBOARD&quot;">
+                    <then>
+                        <call expression="displayScoreboard()"/>
+                    </then>
+                    <else/>
+                </if>
+                <if expression="gameState == &quot;QUIT&quot;">
+                    <then>
+                        <assign variable="shouldQuit" expression="true"/>
+                        <call expression="playEnding(&quot;Farewell&quot;)"/>
+                        <call expression="playEnding(&quot;Quit&quot;)"/>
+                    </then>
+                    <else/>
+                </if>
+            </while>
+        </body>
+    </function>
+    <function name="chooseGameState" type="String" variable="gameState">
+        <parameters/>
+        <body>
+            <declare name="gameState, userInput" type="String" array="False" size=""/>
+            <declare name="currentGameStateIndex" type="Integer" array="False" size=""/>
+            <assign variable="currentGameStateIndex" expression="0"/>
+            <do expression="userInput != &quot;&quot;">
+                <if expression="currentGameStateIndex &gt;= 0">
+                    <then>
+                        <assign variable="currentGameStateIndex" expression="currentGameStateIndex % 3"/>
+                    </then>
+                    <else>
+                        <assign variable="currentGameStateIndex" expression="3 - abs(currentGameStateIndex) % 3"/>
+                    </else>
+                </if>
+                <call expression="printGameMenu(currentGameStateIndex)"/>
+                <output expression="&quot;Use W/w and S/s to select an option (after choosing click ENTER to lock in selection)&quot;" newline="True"/>
+                <input variable="userInput"/>
+                <if expression="userInput == &quot;W&quot; || userInput == &quot;w&quot;">
+                    <then>
+                        <assign variable="currentGameStateIndex" expression="currentGameStateIndex - 1"/>
+                    </then>
+                    <else/>
+                </if>
+                <if expression="userInput == &quot;S&quot; || userInput == &quot;s&quot;">
+                    <then>
+                        <assign variable="currentGameStateIndex" expression="currentGameStateIndex + 1"/>
+                    </then>
+                    <else/>
+                </if>
+            </do>
+            <assign variable="gameState" expression="getCurrentGameState(currentGameStateIndex)"/>
+        </body>
+    </function>
+    <function name="displayScoreboard" type="None" variable="">
+        <parameters/>
+        <body>
+            <declare name="numberOfPlayers" type="Integer" array="False" size=""/>
+            <assign variable="numberOfPlayers" expression="getLengthOfFile(&quot;Scoreboard.txt&quot;)"/>
+            <if expression="numberOfPlayers &gt; 0">
+                <then>
+                    <declare name="usernames" type="String" array="True" size="numberOfPlayers"/>
+                    <declare name="scores" type="Integer" array="True" size="numberOfPlayers"/>
+                    <call expression="getUsernamesAndScores(usernames, scores)"/>
+                    <call expression="mergeSort(usernames, scores, 0, size(usernames)-1)"/>
+                    <call expression="printScoreboardToDisplay(usernames, scores)"/>
+                </then>
+                <else>
+                    <declare name="usernames" type="String" array="True" size="1"/>
+                    <declare name="scores" type="Integer" array="True" size="1"/>
+                    <assign variable="usernames[0]" expression="&quot;Gilbert&quot;"/>
+                    <assign variable="scores[0]" expression="10000"/>
+                    <call expression="printScoreboardToDisplay(usernames, scores)"/>
+                </else>
+            </if>
+        </body>
+    </function>
+    <function name="drawTicTacToeBoard" type="None" variable="">
+        <parameters>
+            <parameter name="board" type="String" array="True"/>
+        </parameters>
+        <body>
+            <declare name="tictactoeFileGrid" type="String" array="True" size="30"/>
+            <call expression="readFileToArray(&quot;TicTacToe_Frame.txt&quot;, tictactoeFileGrid)"/>
+            <declare name="XDrawings, ODrawings, Sign" type="String" array="True" size="9"/>
+            <call expression="readFileToArray(&quot;TicTacToe_X_Character.txt&quot;, XDrawings)"/>
+            <call expression="readFileToArray(&quot;TicTacToe_O_Character.txt&quot;, ODrawings)"/>
+            <declare name="box, row, col" type="Integer" array="False" size=""/>
+            <for variable="box" start="0" end="8" direction="inc" step="1">
+                <assign variable="row" expression="box / 3"/>
+                <assign variable="col" expression="box % 3"/>
+                <declare name="i" type="Integer" array="False" size=""/>
+                <if expression="char(Board[row], col) == &quot;X&quot;">
+                    <then>
+                        <for variable="i" start="0" end="size(Sign) - 1" direction="inc" step="1">
+                            <assign variable="Sign[i]" expression="XDrawings[i]"/>
+                        </for>
+                    </then>
+                    <else>
+                        <if expression="char(Board[row], col) == &quot;O&quot;">
+                            <then>
+                                <for variable="i" start="0" end="size(Sign) - 1" direction="inc" step="1">
+                                    <assign variable="Sign[i]" expression="ODrawings[i]"/>
+                                </for>
+                            </then>
+                            <else/>
+                        </if>
+                    </else>
+                </if>
+                <if expression="char(Board[row], col) != &quot; &quot;">
+                    <then>
+                        <declare name="rowToEdit, colToEdit, j, k" type="Integer" array="False" size=""/>
+                        <declare name="newRow" type="String" array="False" size=""/>
+                        <assign variable="rowToEdit" expression="row * 10 + 1"/>
+                        <for variable="i" start="0" end="size(Sign) - 1" direction="inc" step="1">
+                            <assign variable="k" expression="0"/>
+                            <assign variable="newRow" expression="&quot;&quot;"/>
+                            <assign variable="colToEdit" expression="col * 14 + 2"/>
+                            <for variable="j" start="0" end="len(tictactoeFileGrid[rowToEdit]) - 1" direction="inc" step="1">
+                                <if expression="k &lt; len(Sign[i]) &amp;&amp; j == colToEdit">
+                                    <then>
+                                        <if expression="char(Sign[i], k) == &quot;%&quot;">
+                                            <then>
+                                                <assign variable="newRow" expression="newRow &amp; &quot; &quot;"/>
+                                            </then>
+                                            <else>
+                                                <assign variable="newRow" expression="newRow &amp; char(Sign[i], k)"/>
+                                            </else>
+                                        </if>
+                                        <assign variable="k" expression="k + 1"/>
+                                        <assign variable="colToEdit" expression="colToEdit + 1"/>
+                                    </then>
+                                    <else>
+                                        <assign variable="newRow" expression="newRow &amp; char(tictactoeFileGrid[rowToEdit], j)"/>
+                                    </else>
+                                </if>
+                            </for>
+                            <assign variable="tictactoeFileGrid[rowToEdit]" expression="newRow"/>
+                            <assign variable="rowToEdit" expression="rowToEdit + 1"/>
+                        </for>
+                    </then>
+                    <else/>
+                </if>
+            </for>
+            <call expression="printArrayToDisplay(tictactoeFileGrid)"/>
+        </body>
+    </function>
+    <function name="gameOver" type="Integer" variable="gameOutcome">
+        <parameters>
+            <parameter name="board" type="String" array="True"/>
+        </parameters>
+        <body>
+            <declare name="stateVictoryForX, stateVictoryForO, stateDraw, stateGameNotOver, gameNotOver" type="Integer" array="False" size=""/>
+            <assign variable="gameNotOver" expression="0"/>
+            <assign variable="stateVictoryForX" expression="1"/>
+            <assign variable="stateDraw" expression="2"/>
+            <assign variable="stateVictoryForO" expression="3"/>
+            <declare name="gameOutcome" type="Integer" array="False" size=""/>
+            <declare name="i" type="Integer" array="False" size=""/>
+            <assign variable="gameOutcome" expression="-1"/>
+            <for variable="i" start="0" end="2" direction="inc" step="1">
+                <if expression="char(board[i], 0) == char(board[i], 1) &amp;&amp;&#13;&#10;char(board[i], 1) == char(board[i], 2)">
+                    <then>
+                        <if expression="char(board[i], 1) == &quot;X&quot;">
+                            <then>
+                                <assign variable="gameOutcome" expression="stateVictoryForX"/>
+                            </then>
+                            <else>
+                                <if expression="char(board[i], 1) == &quot;O&quot;">
+                                    <then>
+                                        <assign variable="gameOutcome" expression="stateVictoryForO"/>
+                                    </then>
+                                    <else/>
+                                </if>
+                            </else>
+                        </if>
+                    </then>
+                    <else/>
+                </if>
+                <if expression="char(board[0], i) == char(board[1], i) &amp;&amp;&#13;&#10;char(board[1], i) == char(board[2], i)">
+                    <then>
+                        <if expression="char(board[1], i) == &quot;X&quot;">
+                            <then>
+                                <assign variable="gameOutcome" expression="stateVictoryForX"/>
+                            </then>
+                            <else>
+                                <if expression="char(board[1], i) == &quot;O&quot;">
+                                    <then>
+                                        <assign variable="gameOutcome" expression="stateVictoryForO"/>
+                                    </then>
+                                    <else/>
+                                </if>
+                            </else>
+                        </if>
+                    </then>
+                    <else/>
+                </if>
+            </for>
+            <if expression="char(board[0], 0) == char(board[1], 1) &amp;&amp;&#13;&#10;char(board[1], 1) == char(board[2], 2)">
+                <then>
+                    <if expression="char(board[1], 1) == &quot;X&quot;">
+                        <then>
+                            <assign variable="gameOutcome" expression="stateVictoryForX"/>
+                        </then>
+                        <else>
+                            <if expression="char(board[1], 1) == &quot;O&quot;">
+                                <then>
+                                    <assign variable="gameOutcome" expression="stateVictoryForO"/>
+                                </then>
+                                <else/>
+                            </if>
+                        </else>
+                    </if>
+                </then>
+                <else/>
+            </if>
+            <if expression="char(board[0], 2) == char(board[1], 1) &amp;&amp;&#13;&#10;char(board[1], 1) == char(board[2], 0)">
+                <then>
+                    <if expression="char(board[1], 1) == &quot;X&quot;">
+                        <then>
+                            <assign variable="gameOutcome" expression="stateVictoryForX"/>
+                        </then>
+                        <else>
+                            <if expression="char(board[1], 1) == &quot;O&quot;">
+                                <then>
+                                    <assign variable="gameOutcome" expression="stateVictoryForO"/>
+                                </then>
+                                <else/>
+                            </if>
+                        </else>
+                    </if>
+                </then>
+                <else/>
+            </if>
+            <if expression="gameOutcome == -1">
+                <then>
+                    <assign variable="gameOutcome" expression="stateDraw"/>
+                    <declare name="move" type="Integer" array="False" size=""/>
+                    <for variable="move" start="0" end="8" direction="inc" step="1">
+                        <if expression="isTTTMoveValid(move, board)">
+                            <then>
+                                <assign variable="gameOutcome" expression="gameNotOver"/>
+                            </then>
+                            <else/>
+                        </if>
+                    </for>
+                </then>
+                <else/>
+            </if>
+        </body>
+    </function>
+    <function name="getCurrentGameState" type="String" variable="gameState">
+        <parameters>
+            <parameter name="index" type="Integer" array="False"/>
+        </parameters>
+        <body>
+            <declare name="gameState" type="String" array="False" size=""/>
+            <comment text="Set-up game states array"/>
+            <declare name="numOfGameStates" type="Integer" array="False" size=""/>
+            <assign variable="numOfGameStates" expression="3"/>
+            <declare name="gameStates" type="String" array="True" size="numOfGameStates"/>
+            <assign variable="gameStates[0]" expression="&quot;START&quot;"/>
+            <assign variable="gameStates[1]" expression="&quot;SCOREBOARD&quot;"/>
+            <assign variable="gameStates[2]" expression="&quot;QUIT&quot;"/>
+            <comment text="Make sure index is in range"/>
+            <if expression="index &gt;= 0">
+                <then>
+                    <assign variable="index" expression="index % numOfGameStates"/>
+                </then>
+                <else>
+                    <assign variable="index" expression="numOfGameStates - (abs(index) % numOfGameStates)"/>
+                </else>
+            </if>
+            <assign variable="gameState" expression="gameStates[index]"/>
+        </body>
+    </function>
+    <function name="getLengthOfFile" type="Integer" variable="lengthOfFile">
+        <parameters>
+            <parameter name="nameOfFile" type="String" array="False"/>
+        </parameters>
+        <body>
+            <declare name="trash" type="String" array="False" size=""/>
+            <declare name="lengthOfFile" type="Integer" array="False" size=""/>
+            <open expression="nameOfFile" mode="read"/>
+            <assign variable="lengthOfFile" expression="0"/>
+            <while expression="!EOF()">
+                <assign variable="lengthOfFile" expression="lengthOfFile + 1"/>
+                <read variable="trash"/>
+            </while>
+            <close/>
+        </body>
+    </function>
+    <function name="GetStringFromFile" type="String" variable="stringFromFile">
+        <parameters>
+            <parameter name="fileName" type="String" array="False"/>
+        </parameters>
+        <body>
+            <declare name="stringFromFile" type="String" array="False" size=""/>
+            <open expression="fileName" mode="read"/>
+            <assign variable="stringFromFile" expression="&quot;&quot;"/>
+            <while expression="!EOF()">
+                <if expression="len(stringFromFile) &gt; 0">
+                    <then>
+                        <assign variable="stringFromFile" expression="stringFromFile &amp; ToChar(10)"/>
+                    </then>
+                    <else/>
+                </if>
+                <declare name="tmp" type="String" array="False" size=""/>
+                <read variable="tmp"/>
+                <assign variable="stringFromFile" expression="stringFromFile &amp; tmp"/>
+            </while>
+            <close/>
+        </body>
+    </function>
+    <function name="getUsernamesAndScores" type="None" variable="">
+        <parameters>
+            <parameter name="usernames" type="String" array="True"/>
+            <parameter name="scores" type="Integer" array="True"/>
+        </parameters>
+        <body>
+            <declare name="line, name, score" type="String" array="False" size=""/>
+            <declare name="i, lineNumber" type="Integer" array="False" size=""/>
+            <open expression="&quot;scoreboard.txt&quot;" mode="read"/>
+            <assign variable="lineNumber" expression="0"/>
+            <while expression="!EOF()">
+                <assign variable="name" expression="&quot;&quot;"/>
+                <assign variable="score" expression="&quot;&quot;"/>
+                <read variable="line"/>
+                <assign variable="i" expression="0"/>
+                <while expression="char(line, i) != &quot;,&quot;">
+                    <assign variable="name" expression="name &amp; char(line, i)"/>
+                    <assign variable="i" expression="i + 1"/>
+                </while>
+                <assign variable="i" expression="i + 1"/>
+                <while expression="i &lt; len(line)">
+                    <assign variable="score" expression="score &amp; char(line, i)"/>
+                    <assign variable="i" expression="i + 1"/>
+                </while>
+                <assign variable="usernames[lineNumber]" expression="name"/>
+                <assign variable="scores[lineNumber]" expression="ToInteger(score)"/>
+                <assign variable="lineNumber" expression="lineNumber + 1"/>
+            </while>
+            <close/>
+        </body>
+    </function>
+    <function name="isMoveValid" type="Boolean" variable="moveIsValid">
+        <parameters>
+            <parameter name="Map" type="String" array="True"/>
+            <parameter name="PlayerXY" type="Integer" array="True"/>
+        </parameters>
+        <body>
+            <declare name="moveIsValid" type="Boolean" array="False" size=""/>
+            <if expression="PlayerXY[0] &lt; 0 || PlayerXY[0] &gt;= 29">
+                <then>
+                    <assign variable="moveIsValid" expression="true"/>
+                </then>
+                <else>
+                    <if expression="char(Map[PlayerXY[0]], PlayerXY[1]) == &quot; &quot;">
+                        <then>
+                            <assign variable="moveIsValid" expression="true"/>
+                        </then>
+                        <else>
+                            <assign variable="moveIsValid" expression="false"/>
+                        </else>
+                    </if>
+                </else>
+            </if>
+        </body>
+    </function>
+    <function name="isTowerOfHanoiInputValid" type="Boolean" variable="isValid">
+        <parameters>
+            <parameter name="input" type="String" array="False"/>
+            <parameter name="adminCode" type="String" array="False"/>
+        </parameters>
+        <body>
+            <declare name="isValid" type="Boolean" array="False" size=""/>
+            <if expression="input == adminCode || input == &quot;QUIT&quot;">
+                <then>
+                    <assign variable="isValid" expression="True"/>
+                </then>
+                <else>
+                    <if expression="len(input) != 2">
+                        <then>
+                            <assign variable="isValid" expression="False"/>
+                        </then>
+                        <else>
+                            <if expression="char(input, 0) != &quot;1&quot; &amp;&amp; &#13;&#10;char(input, 0) != &quot;2&quot; &amp;&amp;&#13;&#10;char(input, 0) != &quot;3&quot;">
+                                <then>
+                                    <assign variable="isValid" expression="False"/>
+                                </then>
+                                <else>
+                                    <if expression="char(input, 1) != &quot;1&quot; &amp;&amp; &#13;&#10;char(input, 1) != &quot;2&quot; &amp;&amp;&#13;&#10;char(input, 1) != &quot;3&quot;">
+                                        <then>
+                                            <assign variable="isValid" expression="False"/>
+                                        </then>
+                                        <else>
+                                            <if expression="char(input, 0) == char(input, 1)">
+                                                <then>
+                                                    <assign variable="isValid" expression="False"/>
+                                                </then>
+                                                <else>
+                                                    <assign variable="isValid" expression="True"/>
+                                                </else>
+                                            </if>
+                                        </else>
+                                    </if>
+                                </else>
+                            </if>
+                        </else>
+                    </if>
+                </else>
+            </if>
+        </body>
+    </function>
+    <function name="isTTTMoveValid" type="Boolean" variable="moveIsValid">
+        <parameters>
+            <parameter name="move" type="Integer" array="False"/>
+            <parameter name="board" type="String" array="True"/>
+        </parameters>
+        <body>
+            <declare name="moveIsValid" type="Boolean" array="False" size=""/>
+            <assign variable="moveIsValid" expression="False"/>
+            <if expression="move &gt;= 0 &amp;&amp; move &lt;= 8">
+                <then>
+                    <declare name="row, col" type="Integer" array="False" size=""/>
+                    <assign variable="row" expression="move / 3"/>
+                    <assign variable="col" expression="move % 3"/>
+                    <if expression="char(board[row], col) == &quot; &quot;">
+                        <then>
+                            <assign variable="moveIsValid" expression="True"/>
+                        </then>
+                        <else/>
+                    </if>
+                </then>
+                <else>
+                    <if expression="move == 31336">
+                        <then>
+                            <assign variable="moveIsValid" expression="True"/>
+                        </then>
+                        <else/>
+                    </if>
+                </else>
+            </if>
+        </body>
+    </function>
+    <function name="levelHanoi" type="Integer" variable="score">
+        <parameters>
+            <parameter name="score" type="Integer" array="False"/>
+        </parameters>
+        <body>
+            <declare name="LoadingScreen" type="String" array="True" size="29"/>
+            <call expression="readFileToArray(&quot;Hanoi_Loading_Screen.txt&quot;, LoadingScreen)"/>
+            <call expression="printArrayToDisplay(LoadingScreen)"/>
+            <declare name="shouldProceed" type="String" array="False" size=""/>
+            <output expression="&quot;Type 'yes' if you wish to proceed to the next level. Be careful not to lose everything.&quot;" newline="True"/>
+            <input variable="shouldProceed"/>
+            <if expression="makeWordLowercase(shouldProceed) == &quot;yes&quot;">
+                <then>
+                    <declare name="first, second, third" type="String" array="True" size="6"/>
+                    <declare name="i" type="Integer" array="False" size=""/>
+                    <for variable="i" start="0" end="5" direction="inc" step="1">
+                        <assign variable="first[i]" expression="&quot;#&quot;"/>
+                        <assign variable="second[i]" expression="&quot;#&quot;"/>
+                        <assign variable="third[i]" expression="&quot;#&quot;"/>
+                    </for>
+                    <assign variable="first[2]" expression="&quot;(O)&quot;"/>
+                    <assign variable="first[3]" expression="&quot;(OOO)&quot;"/>
+                    <assign variable="first[4]" expression="&quot;(OOOOO)&quot;"/>
+                    <assign variable="first[5]" expression="&quot;(OOOOOOO)&quot;"/>
+                    <call expression="printTowerOfHanoi(first, second, third)"/>
+                    <declare name="getFromIndex, putToIndex" type="Integer" array="False" size=""/>
+                    <assign variable="getFromIndex" expression="0"/>
+                    <assign variable="putToIndex" expression="0"/>
+                    <declare name="adminCode" type="String" array="False" size=""/>
+                    <assign variable="adminCode" expression="&quot;Hearing that favorite song on repeat&quot;"/>
+                    <declare name="userMadeMove" type="String" array="False" size=""/>
+                    <assign variable="userMadeMove" expression="&quot;&quot;"/>
+                    <while expression="!(third[2] == &quot;(O)&quot;) &amp;&amp; !(userMadeMove == adminCode) &amp;&amp; !(userMadeMove == &quot;QUIT&quot;)">
+                        <do expression="!isTowerOfHanoiInputValid(userMadeMove, adminCode)">
+                            <output expression="&quot;Make your move. ('12' to move from tower one to tower two)&quot;" newline="True"/>
+                            <input variable="userMadeMove"/>
+                        </do>
+                        <if expression="userMadeMove == adminCode || userMadeMove == &quot;QUIT&quot;">
+                            <then>
+                                <assign variable="getFromIndex" expression="0"/>
+                                <assign variable="putToIndex" expression="0"/>
+                            </then>
+                            <else>
+                                <assign variable="getFromIndex" expression="ToInteger(char(userMadeMove, 0))"/>
+                                <assign variable="putToIndex" expression="ToInteger(char(userMadeMove, 1))"/>
+                            </else>
+                        </if>
+                        <declare name="poleToTakeFrom, poleToPutTo" type="String" array="True" size="6"/>
+                        <if expression="getFromIndex == 1">
+                            <then>
+                                <for variable="i" start="0" end="5" direction="inc" step="1">
+                                    <assign variable="poleToTakeFrom[i]" expression="first[i]"/>
+                                </for>
+                            </then>
+                            <else>
+                                <if expression="getFromIndex == 2">
+                                    <then>
+                                        <for variable="i" start="0" end="5" direction="inc" step="1">
+                                            <assign variable="poleToTakeFrom[i]" expression="second[i]"/>
+                                        </for>
+                                    </then>
+                                    <else>
+                                        <for variable="i" start="0" end="5" direction="inc" step="1">
+                                            <assign variable="poleToTakeFrom[i]" expression="third[i]"/>
+                                        </for>
+                                    </else>
+                                </if>
+                            </else>
+                        </if>
+                        <if expression="putToIndex == 1">
+                            <then>
+                                <for variable="i" start="0" end="5" direction="inc" step="1">
+                                    <assign variable="poleToPutTo[i]" expression="first[i]"/>
+                                </for>
+                            </then>
+                            <else>
+                                <if expression="putToIndex == 2">
+                                    <then>
+                                        <for variable="i" start="0" end="5" direction="inc" step="1">
+                                            <assign variable="poleToPutTo[i]" expression="second[i]"/>
+                                        </for>
+                                    </then>
+                                    <else>
+                                        <for variable="i" start="0" end="5" direction="inc" step="1">
+                                            <assign variable="poleToPutTo[i]" expression="third[i]"/>
+                                        </for>
+                                    </else>
+                                </if>
+                            </else>
+                        </if>
+                        <declare name="fromPole, toPole" type="Integer" array="False" size=""/>
+                        <assign variable="fromPole" expression="0"/>
+                        <declare name="found" type="Boolean" array="False" size=""/>
+                        <assign variable="found" expression="false"/>
+                        <while expression="fromPole &lt; size(poleToTakeFrom) &amp;&amp; !found">
+                            <if expression="poleToTakeFrom[fromPole] == &quot;#&quot;">
+                                <then>
+                                    <assign variable="fromPole" expression="fromPole + 1"/>
+                                </then>
+                                <else>
+                                    <assign variable="found" expression="true"/>
+                                </else>
+                            </if>
+                        </while>
+                        <if expression="fromPole &gt;= size(poleToTakeFrom)">
+                            <then>
+                                <assign variable="fromPole" expression="size(poleToTakeFrom)-1"/>
+                            </then>
+                            <else/>
+                        </if>
+                        <declare name="shouldMovePole" type="Boolean" array="False" size=""/>
+                        <assign variable="shouldMovePole" expression="true"/>
+                        <assign variable="toPole" expression="size(poleToPutTo)-1"/>
+                        <assign variable="found" expression="false"/>
+                        <while expression="toPole &gt;= 0 &amp;&amp; !found">
+                            <if expression="(poleToPutTo[topole] != &quot;#&quot;) &amp;&amp; len(poleToTakeFrom[fromPole]) &gt; len(poleToPutTo[topole])">
+                                <then>
+                                    <output expression="&quot;You cannot move a larger pole onto a smaller one.&quot;" newline="True"/>
+                                    <assign variable="shouldMovePole" expression="False"/>
+                                    <assign variable="found" expression="true"/>
+                                </then>
+                                <else/>
+                            </if>
+                            <if expression="poleToPutTo[toPole] != &quot;#&quot;">
+                                <then>
+                                    <assign variable="toPole" expression="toPole - 1"/>
+                                </then>
+                                <else>
+                                    <assign variable="found" expression="true"/>
+                                </else>
+                            </if>
+                        </while>
+                        <if expression="shouldMovePole">
+                            <then>
+                                <declare name="Tmp" type="String" array="False" size=""/>
+                                <assign variable="Tmp" expression="poleToTakeFrom[fromPole]"/>
+                                <assign variable="poleToTakeFrom[fromPole]" expression="poleToPutTo[toPole]"/>
+                                <assign variable="poleToPutTo[toPole]" expression="Tmp"/>
+                            </then>
+                            <else/>
+                        </if>
+                        <if expression="getFromIndex == 1">
+                            <then>
+                                <for variable="i" start="0" end="5" direction="inc" step="1">
+                                    <assign variable="first[i]" expression="poleToTakeFrom[i]"/>
+                                </for>
+                            </then>
+                            <else>
+                                <if expression="getFromIndex == 2">
+                                    <then>
+                                        <for variable="i" start="0" end="5" direction="inc" step="1">
+                                            <assign variable="second[i]" expression="poleToTakeFrom[i]"/>
+                                        </for>
+                                    </then>
+                                    <else>
+                                        <for variable="i" start="0" end="5" direction="inc" step="1">
+                                            <assign variable="third[i]" expression="poleToTakeFrom[i]"/>
+                                        </for>
+                                    </else>
+                                </if>
+                            </else>
+                        </if>
+                        <if expression="putToIndex == 1">
+                            <then>
+                                <for variable="i" start="0" end="5" direction="inc" step="1">
+                                    <assign variable="first[i]" expression="poleToPutTo[i]"/>
+                                </for>
+                            </then>
+                            <else>
+                                <if expression="putToIndex == 2">
+                                    <then>
+                                        <for variable="i" start="0" end="5" direction="inc" step="1">
+                                            <assign variable="second[i]" expression="poleToPutTo[i]"/>
+                                        </for>
+                                    </then>
+                                    <else>
+                                        <for variable="i" start="0" end="5" direction="inc" step="1">
+                                            <assign variable="third[i]" expression="poleToPutTo[i]"/>
+                                        </for>
+                                    </else>
+                                </if>
+                            </else>
+                        </if>
+                        <call expression="printTowerOfHanoi(first, second, third)"/>
+                    </while>
+                    <if expression="userMadeMove != &quot;QUIT&quot;">
+                        <then>
+                            <call expression="playEnding(&quot;Level Passed&quot;)"/>
+                            <assign variable="score" expression="levelWordsearch(score + 1000)"/>
+                        </then>
+                        <else>
+                            <assign variable="score" expression="0"/>
+                            <call expression="playEnding(&quot;Defeat&quot;)"/>
+                        </else>
+                    </if>
+                </then>
+                <else/>
+            </if>
+        </body>
+    </function>
+    <function name="levelMaze" type="Integer" variable="score">
+        <parameters/>
+        <body>
+            <declare name="move" type="String" array="False" size=""/>
+            <declare name="numOfRows" type="Integer" array="False" size=""/>
+            <assign variable="numOfRows" expression="29"/>
+            <declare name="Map" type="String" array="True" size="numOfRows"/>
+            <declare name="PlayerXYCoordinates" type="Integer" array="True" size="2"/>
+            <declare name="Tutorial, Game" type="String" array="False" size=""/>
+            <assign variable="Tutorial" expression="&quot;Maze_Loading_Screen.txt&quot;"/>
+            <assign variable="Game" expression="&quot;Maze_Board.txt&quot;"/>
+            <call expression="prepareMazeMap(Map, PlayerXYCoordinates, Tutorial)"/>
+            <call expression="printArrayToDisplay(Map)"/>
+            <comment text="Waste a bounch of time so the LEVEL 1 will be displayed"/>
+            <declare name="shouldProceed" type="String" array="False" size=""/>
+            <output expression="&quot;Type 'yes' if you wish to proceed to the next level. Be careful not to lose everything.&quot;" newline="True"/>
+            <input variable="shouldProceed"/>
+            <declare name="score" type="Integer" array="False" size=""/>
+            <assign variable="score" expression="0"/>
+            <if expression="makeWordLowercase(shouldProceed) == &quot;yes&quot;">
+                <then>
+                    <comment text="Proceed to real maze"/>
+                    <output expression="&quot;WASD to move up, left, down, right - repectively&quot;" newline="True"/>
+                    <call expression="prepareMazeMap(Map, PlayerXYCoordinates, Game)"/>
+                    <assign variable="move" expression="&quot;&quot;"/>
+                    <while expression="PlayerXYCoordinates[0] &gt;= 0 &amp;&amp; PlayerXYCoordinates[0] &lt; 29 &amp;&amp; move != &quot;Laugh so hard it hurts&quot; &amp;&amp; move != &quot;QUIT&quot;">
+                        <call expression="printArrayToDisplay(Map)"/>
+                        <input variable="move"/>
+                        <call expression="makeMove(Map, PlayerXYCoordinates, move)"/>
+                    </while>
+                    <comment text="Proceed to Level 2"/>
+                    <if expression="PlayerXYCoordinates[0] &lt;= 28 &amp;&amp; move != &quot;QUIT&quot;">
+                        <then>
+                            <call expression="playEnding(&quot;Level Passed&quot;)"/>
+                            <assign variable="score" expression="levelHanoi(score + 1000)"/>
+                        </then>
+                        <else>
+                            <assign variable="score" expression="0"/>
+                            <call expression="playEnding(&quot;Defeat&quot;)"/>
+                        </else>
+                    </if>
+                </then>
+                <else/>
+            </if>
+        </body>
+    </function>
+    <function name="levelTicTacToe" type="Integer" variable="score">
+        <parameters>
+            <parameter name="score" type="Integer" array="False"/>
+        </parameters>
+        <body>
+            <declare name="LoadingScreen" type="String" array="True" size="29"/>
+            <call expression="readFileToArray(&quot;TicTacToe_Loading_Screen.txt&quot;, LoadingScreen)"/>
+            <call expression="printArrayToDisplay(LoadingScreen)"/>
+            <declare name="shouldProceed" type="String" array="False" size=""/>
+            <output expression="&quot;Type 'yes' if you wish to proceed to the next level. Be careful not to lose everything.&quot;" newline="True"/>
+            <input variable="shouldProceed"/>
+            <if expression="makeWordLowercase(shouldProceed) == &quot;yes&quot;">
+                <then>
+                    <output expression="&quot;Enter a number from 1 to 9 to put an X in that box. 1 being top left, 9 being bottom right&quot;" newline="True"/>
+                    <declare name="Board" type="String" array="True" size="3"/>
+                    <declare name="i" type="Integer" array="False" size=""/>
+                    <for variable="i" start="0" end="2" direction="inc" step="1">
+                        <assign variable="Board[i]" expression="&quot;   &quot;"/>
+                    </for>
+                    <call expression="drawTicTacToeBoard(Board)"/>
+                    <declare name="gameOutcome" type="Integer" array="False" size=""/>
+                    <assign variable="gameOutcome" expression="0"/>
+                    <while expression="gameOutcome == 0">
+                        <call expression="playerMakesMove(Board)"/>
+                        <assign variable="gameOutcome" expression="gameOver(Board)"/>
+                        <call expression="drawTicTacToeBoard(Board)"/>
+                        <if expression="gameOutcome == 0">
+                            <then>
+                                <call expression="robotMakesMove(Board)"/>
+                                <assign variable="gameOutcome" expression="gameOver(Board)"/>
+                                <call expression="drawTicTacToeBoard(Board)"/>
+                            </then>
+                            <else/>
+                        </if>
+                    </while>
+                    <if expression="gameOutcome == 1">
+                        <then>
+                            <assign variable="score" expression="score + 1000"/>
+                            <output expression="&quot;Victory!&quot;" newline="True"/>
+                            <call expression="sleep(0.4)"/>
+                            <call expression="playEnding(&quot;Victory&quot;)"/>
+                            <call expression="playIntroOutro(&quot;Outro&quot;)"/>
+                        </then>
+                        <else>
+                            <if expression="gameOutcome == 2">
+                                <then>
+                                    <output expression="&quot;Tie!&quot;" newline="True"/>
+                                    <call expression="sleep(0.4)"/>
+                                    <assign variable="score" expression="levelTicTacToe(score)"/>
+                                </then>
+                                <else>
+                                    <output expression="&quot;Defeat!&quot;" newline="True"/>
+                                    <call expression="sleep(0.4)"/>
+                                    <assign variable="score" expression="0"/>
+                                    <call expression="playEnding(&quot;Defeat&quot;)"/>
+                                </else>
+                            </if>
+                        </else>
+                    </if>
+                </then>
+                <else/>
+            </if>
+        </body>
+    </function>
+    <function name="levelWordsearch" type="Integer" variable="score">
+        <parameters>
+            <parameter name="score" type="Integer" array="False"/>
+        </parameters>
+        <body>
+            <declare name="LoadingScreen" type="String" array="True" size="29"/>
+            <call expression="readFileToArray(&quot;Wordsearch_Loading_Screen.txt&quot;, LoadingScreen)"/>
+            <call expression="printArrayToDisplay(LoadingScreen)"/>
+            <declare name="shouldProceed" type="String" array="False" size=""/>
+            <output expression="&quot;Type 'yes' if you wish to proceed to the next level. Be careful not to lose everything.&quot;" newline="True"/>
+            <input variable="shouldProceed"/>
+            <if expression="(makeWordLowercase(shouldProceed) == &quot;yes&quot;)">
+                <then>
+                    <output expression="&quot;There are 20 hidden words related to dungeons, puzzles, and mysteries. Your task is to type the correct words into the console.&quot;" newline="True"/>
+                    <declare name="wordsearchDisplay" type="String" array="True" size="26"/>
+                    <call expression="readFileToArray(&quot;Wordsearch.txt&quot;, wordsearchDisplay)"/>
+                    <call expression="printArrayToDisplay(wordsearchDisplay)"/>
+                    <declare name="answers, foundWords" type="String" array="True" size="20"/>
+                    <call expression="readFileToArray(&quot;Wordserach_Answers.txt&quot;, answers)"/>
+                    <declare name="i" type="Integer" array="False" size=""/>
+                    <for variable="i" start="0" end="size(foundWords)-1" direction="inc" step="1">
+                        <assign variable="foundWords[i]" expression="&quot;&quot;"/>
+                    </for>
+                    <declare name="numberOfWordsLeft" type="Integer" array="False" size=""/>
+                    <assign variable="numberOfWordsLeft" expression="size(answers)"/>
+                    <declare name="guess" type="String" array="False" size=""/>
+                    <assign variable="guess" expression="&quot;&quot;"/>
+                    <while expression="numberOfWordsLeft &gt; 0 &amp;&amp; guess != &quot;HugsW&quot; &amp;&amp; guess != &quot;QUIT&quot;">
+                        <output expression="&quot;Enter your guess&quot;" newline="True"/>
+                        <input variable="guess"/>
+                        <if expression="wordsInArrayBinarySearch(makeWordLowercase(guess), answers)">
+                            <then>
+                                <if expression="!wordsInArrayLinearSearch(makeWordLowercase(guess), foundWords)">
+                                    <then>
+                                        <assign variable="numberOfWordsLeft" expression="numberOfWOrdsLeft - 1"/>
+                                        <assign variable="foundWords[numberOfWordsLeft]" expression="makeWordLowercase(guess)"/>
+                                        <if expression="numberOfWOrdsLeft &gt; 0">
+                                            <then>
+                                                <output expression="&quot;Congratulations, you've found a word!&quot; &amp; ToChar(10) &amp;&#13;&#10;numberOfWordsLeft &amp; &quot; Left!&quot;" newline="True"/>
+                                            </then>
+                                            <else/>
+                                        </if>
+                                    </then>
+                                    <else>
+                                        <output expression="&quot;Word has already been found!&quot;" newline="True"/>
+                                    </else>
+                                </if>
+                            </then>
+                            <else>
+                                <if expression="guess != &quot;Finding money in unexpected places&quot;">
+                                    <then>
+                                        <output expression="&quot;This is not a word we're looking for!&quot;" newline="True"/>
+                                    </then>
+                                    <else/>
+                                </if>
+                            </else>
+                        </if>
+                    </while>
+                    <if expression="numberOfWordsLeft == 0">
+                        <then>
+                            <output expression="&quot;Congratulations, you've found all of the words!!&quot;" newline="True"/>
+                        </then>
+                        <else/>
+                    </if>
+                    <if expression="guess != &quot;QUIT&quot;">
+                        <then>
+                            <call expression="playEnding(&quot;Level Passed&quot;)"/>
+                            <assign variable="score" expression="levelTicTacToe(score + 1000)"/>
+                        </then>
+                        <else>
+                            <assign variable="score" expression="0"/>
+                            <call expression="playEnding(&quot;Defeat&quot;)"/>
+                        </else>
+                    </if>
+                </then>
+                <else/>
+            </if>
+        </body>
+    </function>
+    <function name="makeMove" type="None" variable="Position">
+        <parameters>
+            <parameter name="Map" type="String" array="True"/>
+            <parameter name="PlayerXY" type="Integer" array="True"/>
+            <parameter name="move" type="String" array="False"/>
+        </parameters>
+        <body>
+            <declare name="previousXY" type="Integer" array="True" size="2"/>
+            <assign variable="previousXY[0]" expression="playerXY[0]"/>
+            <assign variable="previousXY[1]" expression="playerXY[1]"/>
+            <if expression="move == &quot;W&quot; || move == &quot;w&quot;">
+                <then>
+                    <assign variable="PlayerXY[0]" expression="PlayerXY[0] - 1"/>
+                    <if expression="!isMoveValid(Map, PlayerXY)">
+                        <then>
+                            <assign variable="PlayerXY[0]" expression="PlayerXY[0] + 1"/>
+                        </then>
+                        <else/>
+                    </if>
+                </then>
+                <else>
+                    <if expression="move == &quot;S&quot; || move == &quot;s&quot;">
+                        <then>
+                            <assign variable="PlayerXY[0]" expression="PlayerXY[0] + 1"/>
+                            <if expression="!isMoveValid(Map, PlayerXY)">
+                                <then>
+                                    <assign variable="PlayerXY[0]" expression="PlayerXY[0] - 1"/>
+                                </then>
+                                <else/>
+                            </if>
+                        </then>
+                        <else>
+                            <if expression="move == &quot;A&quot; || move == &quot;a&quot;">
+                                <then>
+                                    <assign variable="PlayerXY[1]" expression="PlayerXY[1] - 1"/>
+                                    <if expression="!isMoveValid(Map, PlayerXY)">
+                                        <then>
+                                            <assign variable="PlayerXY[1]" expression="PlayerXY[1] + 1"/>
+                                        </then>
+                                        <else/>
+                                    </if>
+                                </then>
+                                <else>
+                                    <if expression="move == &quot;D&quot; || move == &quot;d&quot;">
+                                        <then>
+                                            <assign variable="PlayerXY[1]" expression="PlayerXY[1] + 1"/>
+                                            <if expression="!isMoveValid(Map, PlayerXY)">
+                                                <then>
+                                                    <assign variable="PlayerXY[1]" expression="PlayerXY[1] - 1"/>
+                                                </then>
+                                                <else/>
+                                            </if>
+                                        </then>
+                                        <else/>
+                                    </if>
+                                </else>
+                            </if>
+                        </else>
+                    </if>
+                </else>
+            </if>
+            <call expression="updateMap(Map, PlayerXY, previousXY)"/>
+        </body>
+    </function>
+    <function name="makeWordLowercase" type="String" variable="lowercaseWord">
+        <parameters>
+            <parameter name="word" type="String" array="False"/>
+        </parameters>
+        <body>
+            <declare name="i" type="Integer" array="False" size=""/>
+            <declare name="lowercaseWord" type="String" array="False" size=""/>
+            <assign variable="lowercaseWord" expression="&quot;&quot;"/>
+            <for variable="i" start="0" end="len(word)-1" direction="inc" step="1">
+                <if expression="char(word, i) &gt;= &quot;A&quot; &amp;&amp; char(word, i) &lt;= &quot;Z&quot;">
+                    <then>
+                        <assign variable="lowercaseWord" expression="lowercaseWord &amp; toChar(ToCode(&quot;a&quot;) + (ToCode(char(word, i)) - ToCode(&quot;A&quot;)))"/>
+                    </then>
+                    <else>
+                        <assign variable="lowercaseWord" expression="lowercaseWord &amp; char(word, i)"/>
+                    </else>
+                </if>
+            </for>
+        </body>
+    </function>
+    <function name="merge" type="None" variable="">
+        <parameters>
+            <parameter name="names" type="String" array="True"/>
+            <parameter name="scores" type="Integer" array="True"/>
+            <parameter name="left" type="Integer" array="False"/>
+            <parameter name="middle" type="Integer" array="False"/>
+            <parameter name="right" type="Integer" array="False"/>
+        </parameters>
+        <body>
+            <declare name="numberOfElementsLeft, numberOfElementsRight, leftIndex, rightIndex, i" type="Integer" array="False" size=""/>
+            <assign variable="numberOfElementsLeft" expression="middle - left + 1"/>
+            <assign variable="numberOfElementsRight" expression="right - middle"/>
+            <declare name="mergedArrayScores" type="Integer" array="True" size="numberOfElementsLeft + numberOfElementsRight"/>
+            <declare name="mergedArrayNames" type="String" array="True" size="numberOfElementsLeft + numberOfElementsRight"/>
+            <assign variable="leftIndex" expression="left"/>
+            <assign variable="rightIndex" expression="middle + 1"/>
+            <for variable="i" start="0" end="(numberOfElementsLeft +&#13;&#10;numberOfElementsRight) - 1" direction="inc" step="1">
+                <if expression="leftIndex &lt;= middle &amp;&amp; rightIndex &lt;= right">
+                    <then>
+                        <if expression="scores[leftIndex] &gt; scores[rightIndex]">
+                            <then>
+                                <assign variable="mergedArrayNames[i]" expression="names[leftIndex]"/>
+                                <assign variable="mergedArrayScores[i]" expression="scores[leftIndex]"/>
+                                <assign variable="leftIndex" expression="leftIndex + 1"/>
+                            </then>
+                            <else>
+                                <assign variable="mergedArrayNames[i]" expression="names[rightIndex]"/>
+                                <assign variable="mergedArrayScores[i]" expression="scores[rightIndex]"/>
+                                <assign variable="rightIndex" expression="rightIndex + 1"/>
+                            </else>
+                        </if>
+                    </then>
+                    <else>
+                        <if expression="leftIndex &lt;= middle">
+                            <then>
+                                <assign variable="mergedArrayNames[i]" expression="names[leftIndex]"/>
+                                <assign variable="mergedArrayScores[i]" expression="scores[leftIndex]"/>
+                                <assign variable="leftIndex" expression="leftIndex + 1"/>
+                            </then>
+                            <else>
+                                <if expression="rightIndex &lt;= right">
+                                    <then>
+                                        <assign variable="mergedArrayNames[i]" expression="names[rightIndex]"/>
+                                        <assign variable="mergedArrayScores[i]" expression="scores[rightIndex]"/>
+                                        <assign variable="rightIndex" expression="rightIndex + 1"/>
+                                    </then>
+                                    <else/>
+                                </if>
+                            </else>
+                        </if>
+                    </else>
+                </if>
+            </for>
+            <for variable="i" start="0" end="(numberOfElementsLeft +&#13;&#10;numberOfElementsRight) - 1" direction="inc" step="1">
+                <assign variable="names[i + left]" expression="mergedArrayNames[i]"/>
+                <assign variable="scores[i + left]" expression="mergedArrayScores[i]"/>
+            </for>
+        </body>
+    </function>
+    <function name="mergeSort" type="None" variable="">
+        <parameters>
+            <parameter name="usernames" type="String" array="True"/>
+            <parameter name="scores" type="Integer" array="True"/>
+            <parameter name="left" type="Integer" array="False"/>
+            <parameter name="right" type="Integer" array="False"/>
+        </parameters>
+        <body>
+            <declare name="middle" type="Integer" array="False" size=""/>
+            <if expression="left &lt; right">
+                <then>
+                    <assign variable="middle" expression="(left + right) / 2"/>
+                    <call expression="mergeSort(usernames, scores, left, middle)"/>
+                    <call expression="mergeSort(usernames, scores, middle + 1, right)"/>
+                    <call expression="merge(usernames, scores, left, middle, right)"/>
+                </then>
+                <else/>
+            </if>
+        </body>
+    </function>
+    <function name="minimax" type="Integer" variable="bestScore">
+        <parameters>
+            <parameter name="board" type="String" array="True"/>
+            <parameter name="isMaximizing" type="Boolean" array="False"/>
+        </parameters>
+        <body>
+            <declare name="bestScore, score, move" type="Integer" array="False" size=""/>
+            <assign variable="score" expression="gameOver(board)"/>
+            <if expression="score != 0">
+                <then>
+                    <assign variable="bestScore" expression="score"/>
+                </then>
+                <else>
+                    <if expression="isMaximizing">
+                        <then>
+                            <assign variable="bestScore" expression="0"/>
+                            <for variable="move" start="0" end="8" direction="inc" step="1">
+                                <if expression="isTTTMoveValid(move, board)">
+                                    <then>
+                                        <call expression="setChar(board, move, &quot;O&quot;)"/>
+                                        <assign variable="score" expression="minimax(board, False)"/>
+                                        <call expression="setChar(board, move, &quot; &quot;)"/>
+                                        <if expression="score &gt; bestScore">
+                                            <then>
+                                                <assign variable="bestScore" expression="score"/>
+                                            </then>
+                                            <else/>
+                                        </if>
+                                    </then>
+                                    <else/>
+                                </if>
+                            </for>
+                        </then>
+                        <else>
+                            <assign variable="bestScore" expression="3"/>
+                            <for variable="move" start="0" end="8" direction="inc" step="1">
+                                <if expression="isTTTMoveValid(move, board)">
+                                    <then>
+                                        <call expression="setChar(board, move, &quot;X&quot;)"/>
+                                        <assign variable="score" expression="minimax(board, True)"/>
+                                        <call expression="setChar(board, move, &quot; &quot;)"/>
+                                        <if expression="score &lt; bestScore">
+                                            <then>
+                                                <assign variable="bestScore" expression="score"/>
+                                            </then>
+                                            <else/>
+                                        </if>
+                                    </then>
+                                    <else/>
+                                </if>
+                            </for>
+                        </else>
+                    </if>
+                </else>
+            </if>
+        </body>
+    </function>
+    <function name="playEnding" type="None" variable="">
+        <parameters>
+            <parameter name="ending" type="String" array="False"/>
+        </parameters>
+        <body>
+            <declare name="CongratulationsScreen" type="String" array="True" size="29"/>
+            <declare name="fileToReadFrom" type="String" array="False" size=""/>
+            <declare name="sleepIntervalUnit" type="Integer" array="False" size=""/>
+            <if expression="ending == &quot;Victory&quot;">
+                <then>
+                    <assign variable="sleepIntervalUnit" expression="1.5"/>
+                    <assign variable="fileToReadFrom" expression="&quot;Victory.txt&quot;"/>
+                </then>
+                <else>
+                    <if expression="ending == &quot;Defeat&quot;">
+                        <then>
+                            <assign variable="sleepIntervalUnit" expression="1.5"/>
+                            <assign variable="fileToReadFrom" expression="&quot;Defeat.txt&quot;"/>
+                        </then>
+                        <else>
+                            <if expression="ending == &quot;Level Passed&quot;">
+                                <then>
+                                    <assign variable="sleepIntervalUnit" expression="1"/>
+                                    <assign variable="fileToReadFrom" expression="&quot;Level_Passed.txt&quot;"/>
+                                </then>
+                                <else>
+                                    <if expression="ending == &quot;Farewell&quot;">
+                                        <then>
+                                            <assign variable="sleepIntervalUnit" expression="1"/>
+                                            <assign variable="fileToReadFrom" expression="&quot;Farewell.txt&quot;"/>
+                                        </then>
+                                        <else>
+                                            <assign variable="sleepIntervalUnit" expression="0"/>
+                                            <assign variable="fileToReadFrom" expression="&quot;Quit_Empty_Screen.txt&quot;"/>
+                                        </else>
+                                    </if>
+                                </else>
+                            </if>
+                        </else>
+                    </if>
+                </else>
+            </if>
+            <call expression="readFileToArray(fileToReadFrom, CongratulationsScreen)"/>
+            <call expression="printArrayToDisplay(CongratulationsScreen)"/>
+            <call expression="sleep(sleepIntervalUnit)"/>
+        </body>
+    </function>
+    <function name="playerMakesMove" type="None" variable="">
+        <parameters>
+            <parameter name="board" type="String" array="True"/>
+        </parameters>
+        <body>
+            <declare name="move, row, col, i, adminCode" type="Integer" array="False" size=""/>
+            <do expression="!isTTTMoveValid(move, board)">
+                <output expression="&quot;Make your move&quot;" newline="True"/>
+                <input variable="move"/>
+                <assign variable="move" expression="move - 1"/>
+            </do>
+            <assign variable="adminCode" expression="31336"/>
+            <if expression="move == adminCode">
+                <then>
+                    <comment text="Mark game as win"/>
+                    <call expression="setChar(board, 0, &quot;X&quot;)"/>
+                    <call expression="setChar(board, 1, &quot;X&quot;)"/>
+                    <call expression="setChar(board, 2, &quot;X&quot;)"/>
+                </then>
+                <else>
+                    <call expression="setChar(board, move, &quot;X&quot;)"/>
+                </else>
+            </if>
+        </body>
+    </function>
+    <function name="playIntroOutro" type="None" variable="">
+        <parameters>
+            <parameter name="mode" type="String" array="False"/>
+        </parameters>
+        <body>
+            <declare name="MessageToDisplay" type="String" array="True" size="29"/>
+            <declare name="fileName" type="String" array="False" size=""/>
+            <if expression="mode == &quot;Intro&quot;">
+                <then>
+                    <assign variable="fileName" expression="&quot;Intro.txt&quot;"/>
+                </then>
+                <else>
+                    <assign variable="fileName" expression="&quot;Outro.txt&quot;"/>
+                </else>
+            </if>
+            <call expression="readFileToArray(fileName, MessageToDisplay)"/>
+            <call expression="printArrayToDisplay(MessageToDisplay)"/>
+            <declare name="proceed" type="String" array="False" size=""/>
+            <output expression="&quot;Hit ENTER to Proceed&quot;" newline="True"/>
+            <input variable="proceed"/>
+        </body>
+    </function>
+    <function name="prepareMazeMap" type="None" variable="">
+        <parameters>
+            <parameter name="Map" type="String" array="True"/>
+            <parameter name="PlayerXY" type="Integer" array="True"/>
+            <parameter name="fileName" type="String" array="False"/>
+        </parameters>
+        <body>
+            <open expression="fileName" mode="read"/>
+            <declare name="i, j" type="Integer" array="False" size=""/>
+            <assign variable="i" expression="0"/>
+            <while expression="!EOF()">
+                <read variable="Map[i]"/>
+                <for variable="j" start="0" end="len(Map[i]) - 1" direction="inc" step="1">
+                    <if expression="char(Map[i], j) == &quot;&amp;&quot;">
+                        <then>
+                            <assign variable="PlayerXY[0]" expression="i"/>
+                            <assign variable="PlayerXY[1]" expression="j"/>
+                        </then>
+                        <else/>
+                    </if>
+                </for>
+                <assign variable="i" expression="i + 1"/>
+            </while>
+            <close/>
+        </body>
+    </function>
+    <function name="printArrayToDisplay" type="None" variable="">
+        <parameters>
+            <parameter name="arrayToPrint" type="String" array="True"/>
+        </parameters>
+        <body>
+            <open expression="&quot;Cryptic Chambers Display.txt&quot;" mode="write"/>
+            <declare name="i, j" type="Integer" array="False" size=""/>
+            <for variable="i" start="0" end="size(ArrayToPrint)-1" direction="inc" step="1">
+                <write expression="arrayToPrint[i]"/>
+            </for>
+            <close/>
+        </body>
+    </function>
+    <function name="printGameMenu" type="None" variable="">
+        <parameters>
+            <parameter name="currentGameStateIndex" type="Integer" array="False"/>
+        </parameters>
+        <body>
+            <declare name="CrypticChambers, selectedOption, mainTitleScreen" type="String" array="False" size=""/>
+            <comment text="Set up Game Title"/>
+            <assign variable="CrypticChambers" expression="&quot;Cryptic_Chambers_ASCII.txt&quot;"/>
+            <assign variable="mainTitleScreen" expression="GetStringFromFile(CrypticChambers) &amp; &#13;&#10;ToChar(10)"/>
+            <comment text="Add currently selected option"/>
+            <if expression="currentGameStateIndex == 0">
+                <then>
+                    <assign variable="selectedOption" expression="&quot;Start_Game_Selected_ASCII.txt&quot;"/>
+                </then>
+                <else>
+                    <if expression="currentGameStateIndex == 1">
+                        <then>
+                            <assign variable="selectedOption" expression="&quot;Scoreboard_Selected_ASCII.txt&quot;"/>
+                        </then>
+                        <else>
+                            <assign variable="selectedOption" expression="&quot;Quit_Selected_ASCII.txt&quot;"/>
+                        </else>
+                    </if>
+                </else>
+            </if>
+            <assign variable="mainTitleScreen" expression="mainTitleScreen &amp; GetStringFromFile(selectedOption)"/>
+            <call expression="printToDisplay(mainTitleScreen)"/>
+        </body>
+    </function>
+    <function name="printScoreboardToDisplay" type="None" variable="">
+        <parameters>
+            <parameter name="names" type="String" array="True"/>
+            <parameter name="scores" type="Integer" array="True"/>
+        </parameters>
+        <body>
+            <declare name="Display" type="String" array="True" size="size(names) + 8"/>
+            <open expression="&quot;Scoreboard_Frame.txt&quot;" mode="read"/>
+            <declare name="i" type="Integer" array="False" size=""/>
+            <for variable="i" start="0" end="5" direction="inc" step="1">
+                <read variable="Display[i]"/>
+            </for>
+            <for variable="i" start="size(Display) - 2" end="size(Display)-1" direction="inc" step="1">
+                <read variable="Display[i]"/>
+            </for>
+            <close/>
+            <declare name="place, offset, j" type="Integer" array="False" size=""/>
+            <assign variable="offset" expression="6"/>
+            <assign variable="place" expression="1"/>
+            <declare name="winningChar, row" type="String" array="False" size=""/>
+            <for variable="i" start="0" end="size(names)-1" direction="inc" step="1">
+                <if expression="i &gt; 0">
+                    <then>
+                        <if expression="scores[i] &lt; scores[i-1]">
+                            <then>
+                                <assign variable="place" expression="place + 1"/>
+                            </then>
+                            <else/>
+                        </if>
+                    </then>
+                    <else/>
+                </if>
+                <assign variable="winningChar" expression="ToString(place)"/>
+                <assign variable="row" expression="&quot;##   &quot; &amp; winningChar &amp; &quot;.&quot;"/>
+                <for variable="j" start="0" end="3 - len(winningChar) - 1" direction="inc" step="1">
+                    <assign variable="row" expression="row &amp; &quot; &quot;"/>
+                </for>
+                <assign variable="row" expression="row &amp; names[i]"/>
+                <for variable="j" start="0" end="25 - len(names[i]) - 1" direction="inc" step="1">
+                    <assign variable="row" expression="row &amp; &quot;.&quot;"/>
+                </for>
+                <assign variable="row" expression="row &amp; ToString(scores[i])"/>
+                <for variable="j" start="0" end="8 - len(ToString(scores[i])) - 1" direction="inc" step="1">
+                    <assign variable="row" expression="row &amp; &quot; &quot;"/>
+                </for>
+                <assign variable="row" expression="row &amp; &quot;##&quot;"/>
+                <assign variable="display[i+offset]" expression="row"/>
+            </for>
+            <open expression="&quot;Cryptic Chambers Display.txt&quot;" mode="write"/>
+            <for variable="i" start="0" end="size(Display)-1" direction="inc" step="1">
+                <write expression="Display[i]"/>
+            </for>
+            <close/>
+            <output expression="&quot;Hit ENTER to proceed&quot;" newline="True"/>
+            <declare name="proceed" type="String" array="False" size=""/>
+            <input variable="proceed"/>
+        </body>
+    </function>
+    <function name="printToDisplay" type="None" variable="">
+        <parameters>
+            <parameter name="message" type="String" array="False"/>
+        </parameters>
+        <body>
+            <declare name="CrypticChambersDisplay" type="String" array="False" size=""/>
+            <assign variable="CrypticChambersDisplay" expression="&quot;Cryptic Chambers Display.txt&quot;"/>
+            <call expression="printToFile(CrypticChambersDisplay, message)"/>
+        </body>
+    </function>
+    <function name="printToFile" type="None" variable="">
+        <parameters>
+            <parameter name="fileName" type="String" array="False"/>
+            <parameter name="stringToPrint" type="String" array="False"/>
+        </parameters>
+        <body>
+            <open expression="fileName" mode="write"/>
+            <write expression="stringToPrint"/>
+            <close/>
+        </body>
+    </function>
+    <function name="printTowerOfHanoi" type="None" variable="">
+        <parameters>
+            <parameter name="first" type="String" array="True"/>
+            <parameter name="second" type="String" array="True"/>
+            <parameter name="third" type="String" array="True"/>
+        </parameters>
+        <body>
+            <declare name="zeroToOneSpacing, oneToTwoSpacing, twoToThreeSpacing" type="Integer" array="False" size=""/>
+            <assign variable="zeroToOneSpacing" expression="11"/>
+            <assign variable="oneToTwoSpacing" expression="22"/>
+            <assign variable="twoToThreeSpacing" expression="22"/>
+            <declare name="HanoiGameArray" type="String" array="True" size="13"/>
+            <declare name="i, j" type="Integer" array="False" size=""/>
+            <open expression="&quot;Hanoi_Frame.txt&quot;" mode="read"/>
+            <for variable="i" start="0" end="4" direction="inc" step="1">
+                <read variable="HanoiGameArray[i]"/>
+            </for>
+            <for variable="i" start="11" end="12" direction="inc" step="1">
+                <read variable="HanoiGameArray[i]"/>
+            </for>
+            <close/>
+            <for variable="i" start="0" end="size(first)-1" direction="inc" step="1">
+                <declare name="Row" type="String" array="False" size=""/>
+                <assign variable="Row" expression="&quot;#&quot;"/>
+                <for variable="j" start="0" end="zeroToOneSpacing - (len(first[i]) - 1) / 2 - 1 " direction="inc" step="1">
+                    <assign variable="Row" expression="Row &amp; &quot; &quot;"/>
+                </for>
+                <assign variable="Row" expression="Row &amp; first[i]"/>
+                <for variable="j" start="0" end="oneToTwoSpacing - (len(second[i]) - 1) / 2 - (len(first[i]) - 1) / 2 - 1" direction="inc" step="1">
+                    <assign variable="Row" expression="Row &amp; &quot; &quot;"/>
+                </for>
+                <assign variable="Row" expression="Row &amp; second[i]"/>
+                <for variable="j" start="0" end="twoToThreeSpacing - ((len(third[i]) - 1) / 2) - ((len(second[i]) - 1) / 2) - 1" direction="inc" step="1">
+                    <assign variable="Row" expression="Row &amp; &quot; &quot;"/>
+                </for>
+                <assign variable="Row" expression="Row &amp; third[i]"/>
+                <for variable="j" start="0" end="zeroToOneSpacing - (len(third[i]) - 1) / 2 - 1 " direction="inc" step="1">
+                    <assign variable="Row" expression="Row &amp; &quot; &quot;"/>
+                </for>
+                <assign variable="Row" expression="Row &amp; &quot;#&quot;"/>
+                <assign variable="HanoiGameArray[i + 5]" expression="Row"/>
+            </for>
+            <call expression="printArrayToDisplay(HanoiGameArray)"/>
+        </body>
+    </function>
+    <function name="promptUserForName" type="String" variable="userName">
+        <parameters/>
+        <body>
+            <declare name="userName" type="String" array="False" size=""/>
+            <declare name="userNameScreen" type="String" array="True" size="29"/>
+            <call expression="readFileToArray(&quot;Prompt_User_For_Name_Screen.txt&quot;, userNameScreen)"/>
+            <call expression="printArrayToDisplay(userNameScreen)"/>
+            <do expression="!userNameInputIsValid(userName)">
+                <input variable="userName"/>
+            </do>
+        </body>
+    </function>
+    <function name="readFileToArray" type="None" variable="">
+        <parameters>
+            <parameter name="nameOfFile" type="String" array="False"/>
+            <parameter name="arrayToReadTo" type="String" array="True"/>
+        </parameters>
+        <body>
+            <open expression="nameOfFile" mode="read"/>
+            <declare name="i" type="Integer" array="False" size=""/>
+            <assign variable="i" expression="0"/>
+            <while expression="!EOF()">
+                <read variable="arrayToReadTo[i]"/>
+                <assign variable="i" expression="i + 1"/>
+            </while>
+            <close/>
+        </body>
+    </function>
+    <function name="robotMakesMove" type="None" variable="">
+        <parameters>
+            <parameter name="board" type="String" array="True"/>
+        </parameters>
+        <body>
+            <declare name="bestScore, bestMove, score, move" type="Integer" array="False" size=""/>
+            <declare name="numberOfMadeMoves" type="Integer" array="False" size=""/>
+            <assign variable="numberOfMadeMoves" expression="0"/>
+            <for variable="move" start="0" end="8" direction="inc" step="1">
+                <if expression="!isTTTMoveValid(move, board)">
+                    <then>
+                        <assign variable="numberOfMadeMoves" expression="numberOfMadeMoves + 1"/>
+                    </then>
+                    <else/>
+                </if>
+            </for>
+            <comment text="It takes too long to calculate every position from move 0, start calculating from second move and place the first move randomly. This also gives a chance for the user to win."/>
+            <if expression="numberOfMadeMoves &gt; 1">
+                <then>
+                    <assign variable="bestScore" expression="0"/>
+                    <assign variable="bestMove" expression="0"/>
+                    <for variable="move" start="0" end="8" direction="inc" step="1">
+                        <if expression="isTTTMoveValid(move, board)">
+                            <then>
+                                <call expression="setChar(board, move, &quot;O&quot;)"/>
+                                <assign variable="score" expression="minimax(board, False)"/>
+                                <call expression="setChar(board, move, &quot; &quot;)"/>
+                                <if expression="score &gt; bestScore">
+                                    <then>
+                                        <assign variable="bestScore" expression="score"/>
+                                        <assign variable="bestMove" expression="move"/>
+                                    </then>
+                                    <else/>
+                                </if>
+                            </then>
+                            <else/>
+                        </if>
+                    </for>
+                </then>
+                <else>
+                    <do expression="!(isTTTMoveValid(bestMove, board))">
+                        <assign variable="bestMove" expression="random(9)"/>
+                    </do>
+                </else>
+            </if>
+            <call expression="setChar(board, bestMove, &quot;O&quot;)"/>
+        </body>
+    </function>
+    <function name="setChar" type="None" variable="">
+        <parameters>
+            <parameter name="board" type="String" array="True"/>
+            <parameter name="move" type="Integer" array="False"/>
+            <parameter name="charToSet" type="String" array="False"/>
+        </parameters>
+        <body>
+            <declare name="row, col, i" type="Integer" array="False" size=""/>
+            <assign variable="row" expression="move / 3"/>
+            <assign variable="col" expression="move % 3"/>
+            <declare name="newString" type="String" array="False" size=""/>
+            <assign variable="newString" expression="&quot;&quot;"/>
+            <for variable="i" start="0" end="len(board[row])-1" direction="inc" step="1">
+                <if expression="i == col">
+                    <then>
+                        <assign variable="newString" expression="newString &amp; charToSet"/>
+                    </then>
+                    <else>
+                        <assign variable="newString" expression="newString &amp; char(board[row], i)"/>
+                    </else>
+                </if>
+            </for>
+            <assign variable="board[row]" expression="newString"/>
+        </body>
+    </function>
+    <function name="sleep" type="None" variable="">
+        <parameters>
+            <parameter name="units" type="Real" array="False"/>
+        </parameters>
+        <body>
+            <declare name="timer" type="Real" array="False" size=""/>
+            <for variable="timer" start="0" end="units * 100000" direction="inc" step="1"/>
+        </body>
+    </function>
+    <function name="stringOneIsAlphabeticallyBiggerThanStringTwo" type="Boolean" variable="isBigger">
+        <parameters>
+            <parameter name="str1" type="String" array="False"/>
+            <parameter name="str2" type="String" array="False"/>
+        </parameters>
+        <body>
+            <declare name="isBigger, found" type="Boolean" array="False" size=""/>
+            <declare name="minSize, i" type="Integer" array="False" size=""/>
+            <assign variable="minSize" expression="len(str1)"/>
+            <assign variable="isBigger" expression="False"/>
+            <if expression="len(str2) &lt; minSize">
+                <then>
+                    <assign variable="minSize" expression="len(str2)"/>
+                </then>
+                <else/>
+            </if>
+            <assign variable="i" expression="0"/>
+            <assign variable="found" expression="False"/>
+            <while expression="i &lt; minSize &amp;&amp; !found">
+                <if expression="ToCode(Char(str1, i)) &gt; ToCode(Char(str2, i))">
+                    <then>
+                        <assign variable="found" expression="True"/>
+                        <assign variable="isBigger" expression="True"/>
+                    </then>
+                    <else>
+                        <if expression="ToCode(Char(str1, i)) &lt; ToCode(Char(str2, i))">
+                            <then>
+                                <assign variable="found" expression="True"/>
+                                <assign variable="isBigger" expression="False"/>
+                            </then>
+                            <else/>
+                        </if>
+                    </else>
+                </if>
+                <assign variable="i" expression="i + 1"/>
+            </while>
+        </body>
+    </function>
+    <function name="updateMap" type="None" variable="">
+        <parameters>
+            <parameter name="Map" type="String" array="True"/>
+            <parameter name="PlayerXY" type="Integer" array="True"/>
+            <parameter name="previousXY" type="Integer" array="True"/>
+        </parameters>
+        <body>
+            <declare name="newRow" type="String" array="False" size=""/>
+            <declare name="j" type="Integer" array="False" size=""/>
+            <assign variable="newRow" expression="&quot;&quot;"/>
+            <if expression="PlayerXY[0] &gt;= 0 &amp;&amp; PlayerXY[0] &lt; 29">
+                <then>
+                    <for variable="j" start="0" end="len(Map[PlayerXY[0]])-1" direction="inc" step="1">
+                        <if expression="PlayerXY[1] == j">
+                            <then>
+                                <assign variable="newRow" expression="newRow &amp; &quot;&amp;&quot;"/>
+                            </then>
+                            <else>
+                                <if expression="char(Map[PlayerXY[0]], j) == &quot;&amp;&quot;">
+                                    <then>
+                                        <assign variable="newRow" expression="newRow &amp; &quot; &quot;"/>
+                                    </then>
+                                    <else>
+                                        <assign variable="newRow" expression="newRow &amp; char(Map[PlayerXY[0]], j)"/>
+                                    </else>
+                                </if>
+                            </else>
+                        </if>
+                    </for>
+                    <assign variable="Map[PlayerXY[0]]" expression="newRow"/>
+                    <assign variable="newRow" expression="&quot;&quot;"/>
+                    <if expression="previousXY[0] != PlayerXY[0]">
+                        <then>
+                            <for variable="j" start="0" end="len(Map[previousXY[0]])-1" direction="inc" step="1">
+                                <if expression="char(Map[previousXY[0]], j) == &quot;&amp;&quot;">
+                                    <then>
+                                        <assign variable="newRow" expression="newRow &amp; &quot; &quot;"/>
+                                    </then>
+                                    <else>
+                                        <assign variable="newRow" expression="newRow &amp; char(Map[previousXY[0]], j)"/>
+                                    </else>
+                                </if>
+                            </for>
+                            <assign variable="Map[previousXY[0]]" expression="newRow"/>
+                        </then>
+                        <else/>
+                    </if>
+                </then>
+                <else/>
+            </if>
+        </body>
+    </function>
+    <function name="updateUserScore" type="None" variable="">
+        <parameters>
+            <parameter name="userName" type="String" array="False"/>
+            <parameter name="score" type="Integer" array="False"/>
+        </parameters>
+        <body>
+            <declare name="numberOfPlayers" type="Integer" array="False" size=""/>
+            <assign variable="numberOfPlayers" expression="getLengthOfFile(&quot;scoreboard.txt&quot;)"/>
+            <assign variable="numberOfPlayers" expression="numberOfPlayers + 1"/>
+            <declare name="usernames" type="String" array="True" size="numberOfPlayers"/>
+            <declare name="scores" type="Integer" array="True" size="numberOfPlayers"/>
+            <call expression="getUsernamesAndScores(usernames, scores)"/>
+            <assign variable="usernames[numberOfPlayers-1]" expression="&quot;&quot;"/>
+            <assign variable="scores[numberOfPlayers-1]" expression="0"/>
+            <declare name="sizeOfNewArray, i" type="Integer" array="False" size=""/>
+            <if expression="wordsInArrayLinearSearch(userName, usernames)">
+                <then>
+                    <assign variable="sizeOfNewArray" expression="numberOfPlayers - 1"/>
+                </then>
+                <else>
+                    <assign variable="sizeOfNewArray" expression="numberOfPlayers"/>
+                </else>
+            </if>
+            <open expression="&quot;scoreboard.txt&quot;" mode="write"/>
+            <for variable="i" start="0" end="sizeOfNewArray-1" direction="inc" step="1">
+                <if expression="usernames[i] == &quot;&quot;">
+                    <then>
+                        <write expression="userName &amp; &quot;,&quot; &amp; score"/>
+                    </then>
+                    <else>
+                        <if expression="userName == usernames[i]">
+                            <then>
+                                <write expression="userName &amp; &quot;,&quot; &amp; score"/>
+                            </then>
+                            <else>
+                                <write expression="usernames[i] &amp; &quot;,&quot; &amp; scores[i]"/>
+                            </else>
+                        </if>
+                    </else>
+                </if>
+            </for>
+            <close/>
+        </body>
+    </function>
+    <function name="userNameInputIsValid" type="Boolean" variable="isValid">
+        <parameters>
+            <parameter name="userName" type="String" array="False"/>
+        </parameters>
+        <body>
+            <declare name="isValid" type="Boolean" array="False" size=""/>
+            <assign variable="isValid" expression="True"/>
+            <if expression="userName == &quot;&quot;">
+                <then>
+                    <assign variable="isValid" expression="False"/>
+                    <output expression="&quot;You have to enter a username.&quot;" newline="True"/>
+                </then>
+                <else>
+                    <if expression="len(userName) &gt; 20">
+                        <then>
+                            <assign variable="isValid" expression="False"/>
+                            <output expression="&quot;Username length cannot exceed 20 characters. Sorry.&quot;" newline="True"/>
+                        </then>
+                        <else>
+                            <declare name="i" type="Integer" array="False" size=""/>
+                            <for variable="i" start="0" end="len(userName)-1" direction="inc" step="1">
+                                <if expression="(char(userName, i) &lt; &quot;A&quot; || char(userName, i) &gt; &quot;Z&quot;) &amp;&amp; (char(userName, i) &lt; &quot;a&quot; || char(userName, i) &gt; &quot;z&quot;)">
+                                    <then>
+                                        <assign variable="isValid" expression="False"/>
+                                    </then>
+                                    <else/>
+                                </if>
+                            </for>
+                            <if expression="!isValid">
+                                <then>
+                                    <output expression="&quot;You can only use lowercase or uppercase letters. Sorry.&quot;" newline="True"/>
+                                </then>
+                                <else/>
+                            </if>
+                        </else>
+                    </if>
+                </else>
+            </if>
+        </body>
+    </function>
+    <function name="wordsInArrayBinarySearch" type="Boolean" variable="wordHasBeenFound">
+        <parameters>
+            <parameter name="guess" type="String" array="False"/>
+            <parameter name="words" type="String" array="True"/>
+        </parameters>
+        <body>
+            <declare name="wordHasBeenFound" type="Boolean" array="False" size=""/>
+            <assign variable="wordHasBeenFound" expression="false"/>
+            <declare name="left, middle, right" type="Integer" array="False" size=""/>
+            <assign variable="left" expression="0"/>
+            <assign variable="right" expression="size(words) - 1"/>
+            <while expression="left &lt;= right &amp;&amp; &#13;&#10;!wordHasBeenFound">
+                <assign variable="middle" expression="(left + right) / 2"/>
+                <if expression="guess == words[middle]">
+                    <then>
+                        <assign variable="wordHasBeenFound" expression="true"/>
+                    </then>
+                    <else>
+                        <if expression="stringOneIsAlphabeticallyBiggerThanStringTwo(guess, words[middle])">
+                            <then>
+                                <assign variable="left" expression="middle + 1"/>
+                            </then>
+                            <else>
+                                <assign variable="right" expression="middle - 1"/>
+                            </else>
+                        </if>
+                    </else>
+                </if>
+            </while>
+        </body>
+    </function>
+    <function name="wordsInArrayLinearSearch" type="Boolean" variable="isInArray">
+        <parameters>
+            <parameter name="guess" type="String" array="False"/>
+            <parameter name="words" type="String" array="True"/>
+        </parameters>
+        <body>
+            <declare name="isInArray" type="Boolean" array="False" size=""/>
+            <assign variable="isInArray" expression="false"/>
+            <declare name="i" type="Integer" array="False" size=""/>
+            <for variable="i" start="0" end="size(words)-1" direction="inc" step="1">
+                <if expression="guess == words[i]">
+                    <then>
+                        <assign variable="isInArray" expression="true"/>
+                    </then>
+                    <else/>
+                </if>
+            </for>
+        </body>
+    </function>
+</flowgorithm>

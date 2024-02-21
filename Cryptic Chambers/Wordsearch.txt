@@ -1,0 +1,26 @@
+ ###########################################
+#                WORD SEARCH                #
+ ###########################################
+#                                           #
+#  Z N K X E Y S O X E I U F A A F C S C G  #
+#  A Q K H Q V N N F U O Q D V R F H K M A  #
+#  L G L Y U D K X O K V U E U M I A S D C  #
+#  V N Y U K N M C F R V G A D N P M K J F  #
+#  Q A N G R C L P N S C K E Y S G B L Q V  #
+#  O C T A X K R R Z J K M V M G T E F A C  #
+#  S E J E L P M H E Q R E A J L L R O P R  #
+#  E Z U C C F M H S Y M F L G S S V J N K  #
+#  B E A G C D I J D R T H Y E I U O R G S  #
+#  P W B R V U P T G R V D T Y T C X C O T  #
+#  C U R Y M N Y Q R J A F G Q T O P A B K  #
+#  E D W X I O Q A D P K G B C R U N U L H  #
+#  P O T I O N R M D O V P O W E Z Z T E H  #
+#  B Q U N T X E D W V B J V N A L S A T G  #
+#  C K J D U K O J P L E D Z U S Y H V D Q  #
+#  W I Z A R D S W O R D N L R U M H A I F  #
+#  U N V L A B Y R I N T H T P R Y J T Q T  #
+#  I I V G A L C G E Z E K Y U E C R Y P T  #
+#  M A Z E G B H U X X T R A P R M A G E V  #
+#  B G A R G O Y L E E W H A W C E L K D Z  #
+#                                           #
+ ###########################################
